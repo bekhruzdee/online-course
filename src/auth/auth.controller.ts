@@ -1,34 +1,51 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UseGuards,
+  Req,
+  Res,
+  UsePipes,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { AuthGuard } from './auth.guard';
+import type { Response, Request } from 'express';
+import { SanitizePipe } from 'src/common/pipes/sanitize.pipe';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
+  // 🔹 CSRF token endpoint
+  @Get('csrf-token')
+  getCsrfToken(@Req() req: Request) {
+    const csrfToken = (req as any).csrfToken();
+    return { csrfToken };
+  }
+
+  // 🔹 Register endpoint, XSS sanitization bilan
+  @Post('register')
+  register(@Body() createAuthDto: CreateAuthDto) {
     return this.authService.create(createAuthDto);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  // 🔹 Login endpoint, XSS sanitization bilan
+  @Post('login')
+  login(
+    @Body() loginDto: { username: string; password: string },
+    @Res() res: Response,
+  ) {
+    return this.authService.login(loginDto, res);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  // 🔹 Logout endpoint, faqat auth guard bilan
+  @Post('logout')
+  @UseGuards(AuthGuard)
+  logout(@Res() res: Response) {
+    const result = this.authService.logout();
+    res.clearCookie('refresh_token'); // token cookie-ni tozalash
+    return res.status(200).json(result);
   }
 }
