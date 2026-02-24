@@ -1,164 +1,135 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { CreateAdminDto } from './dto/create-admin.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
-import { plainToInstance } from 'class-transformer';
+import { Role } from 'src/roles/entities/role.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+
+    @InjectRepository(Role)
+    private roleRepository: Repository<Role>,
   ) {}
 
-  async findOneByUsername(username: string): Promise<{
-    success: boolean;
-    message: string;
-    data?: Omit<User, 'password'>;
-  }> {
-    if (!username?.trim()) {
-      return {
-        success: false,
-        message: 'Username query parameter is required and cannot be empty ⚠️',
-      };
+  async findOneByUsername(username: string): Promise<User | null> {
+    return this.usersRepository.findOne({
+      where: { username },
+      relations: ['role'],
+    });
+  }
+
+  async createUser(dto: CreateUserDto) {
+    const existingUser = await this.usersRepository.findOne({
+      where: { username: dto.username },
+    });
+    if (existingUser) throw new ConflictException('User already exists ❌');
+
+    const role = await this.roleRepository.findOne({
+      where: { id: dto.roleId },
+    });
+    if (!role) throw new NotFoundException('Role not found ❌');
+
+    if (role.name === 'admin') {
+      throw new ConflictException('Cannot create superadmin via API ❌');
     }
 
-    const user = await this.usersRepository
-      .createQueryBuilder('u')
-      .select(['u.id', 'u.username', 'u.role', 'u.createdAt', 'u.updatedAt'])
-      .where('u.username ILIKE :username', { username: `%${username}%` })
-      .getOne();
+    const user = this.usersRepository.create({
+      username: dto.username,
+      password: await bcrypt.hash(dto.password, 12),
+      role,
+    });
 
-    if (!user) {
-      return {
-        success: false,
-        message: `User with username containing "${username}" not found ⚠️`,
-      };
-    }
-
-    const { password, ...safeUser } = user as any;
+    const saved = await this.usersRepository.save(user);
+    const { password, ...safeUser } = saved;
     return {
       success: true,
-      message: 'User found successfully ✅',
+      message: 'User created successfully ✅',
       data: safeUser,
     };
   }
 
-  async createAdmin(
-    createAdminDto: CreateAdminDto,
-  ): Promise<{ success: boolean; message: string; data?: User }> {
-    const existingUser = await this.findOneByUsername(createAdminDto.username);
-
-    if (existingUser.success) {
-      return {
-        success: false,
-        message: 'User already exists',
-      };
-    }
-
-    const hashedPassword = await bcrypt.hash(createAdminDto.password, 10);
-
-    const newAdmin = this.usersRepository.create({
-      ...createAdminDto,
-      password: hashedPassword,
-    });
-
-    const savedAdmin = await this.usersRepository.save(newAdmin);
-
-    const { password, ...safeAdmin } = savedAdmin;
-
+  async findAll() {
+    const users = await this.usersRepository.find({ relations: ['role'] });
+    const safeUsers = users.map(({ password, ...rest }) => rest);
     return {
       success: true,
-      message: 'Admin created successfully',
-      data: safeAdmin as User,
+      message: 'Users retrieved successfully ✅',
+      data: safeUsers,
     };
   }
 
-  async getUserCount(): Promise<{ total: number }> {
-    const total = await this.usersRepository.count();
-    return { total };
-  }
-
-  async findAll(): Promise<{
-    success: boolean;
-    message: string;
-    data: Omit<User, 'password'>[];
-  }> {
-    const users = await this.usersRepository.find({
-      select: ['id', 'username', 'role', 'createdAt', 'updatedAt'],
-    });
-    return {
-      success: true,
-      message: 'Users data retrieved successfully✅',
-      data: users,
-    };
-  }
-
-  async findOne(id: string): Promise<Omit<User, 'password'>> {
+  async findOne(id: string) {
     const user = await this.usersRepository.findOne({
       where: { id },
-      select: ['id', 'username', 'role', 'createdAt', 'updatedAt'],
+      relations: ['role'],
     });
+    if (!user) throw new NotFoundException('User not found ❌');
 
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found❌`);
-    }
-
-    return user;
-  }
-
-  async update(
-    userId: string,
-    updateUserDto: UpdateUserDto,
-  ): Promise<{ success: boolean; message: string; data?: User }> {
-    const existingUser = await this.usersRepository.findOne({
-      where: { id: userId },
-    });
-
-    if (!existingUser) {
-      return {
-        success: false,
-        message: 'User not found⚠️',
-      };
-    }
-
-    if (updateUserDto.password) {
-      const hashedPassword = await bcrypt.hash(updateUserDto.password, 10);
-      updateUserDto.password = hashedPassword;
-    }
-
-    const updatedUser = await this.usersRepository.save({
-      ...existingUser,
-      ...updateUserDto,
-    });
-
+    const { password, ...safeUser } = user;
     return {
       success: true,
-      message: 'User updated successfully✅',
-      data: plainToInstance(User, updatedUser),
+      message: 'User retrieved successfully ✅',
+      data: safeUser,
     };
   }
 
-  async remove(userId: string): Promise<{ success: boolean; message: string }> {
-    const existingUser = await this.usersRepository.findOne({
+  async update(userId: string, dto: UpdateUserDto) {
+    const user = await this.usersRepository.findOne({
       where: { id: userId },
+      relations: ['role'],
     });
+    if (!user) return { success: false, message: 'User not found ⚠️' };
 
-    if (!existingUser) {
-      return {
-        success: false,
-        message: 'User not found⚠️',
-      };
+    if (user.role?.name === 'admin') {
+      throw new ConflictException('Superadmin cannot be modified ❌');
     }
 
-    await this.usersRepository.delete(userId);
+    if (dto.password) dto.password = await bcrypt.hash(dto.password, 12);
+
+    if (dto.roleId) {
+      const role = await this.roleRepository.findOne({
+        where: { id: dto.roleId },
+      });
+      if (!role) throw new NotFoundException('Role not found ❌');
+      user.role = role;
+    }
+
+    Object.assign(user, dto);
+    const updated = await this.usersRepository.save(user);
+    const { password, ...safeUser } = updated;
 
     return {
       success: true,
-      message: 'User deleted successfully✅',
+      message: 'User updated successfully ✅',
+      data: safeUser,
+    };
+  }
+
+  async remove(userId: string) {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+      relations: ['role'],
+    });
+    if (!user) return { success: false, message: 'User not found ⚠️' };
+
+    if (user.role?.name === 'admin') {
+      throw new ConflictException('Superadmin cannot be deleted ❌');
+    }
+
+    await this.usersRepository.remove(user);
+    return {
+      success: true,
+      message: 'User deleted successfully ✅',
     };
   }
 }

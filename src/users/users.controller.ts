@@ -11,49 +11,42 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { CreateAdminDto } from './dto/create-admin.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { RolesGuard } from 'src/auth/role.guard';
+import { CreateUserDto } from './dto/create-user.dto';
 import { SearchUserDto } from './dto/search-user.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { Roles, RolesGuard } from 'src/common/guards/role.guard';
 
+@UseGuards(AuthGuard, RolesGuard)
+@Roles('admin')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post(`create-admin`)
-  createAdmin(@Body() createAdminDto: CreateAdminDto) {
-    return this.usersService.createAdmin(createAdminDto);
+  @Post()
+  createUser(@Body() dto: CreateUserDto) {
+    return this.usersService.createUser(dto);
   }
 
-  @Get('count')
-  getUserCount() {
-    return this.usersService.getUserCount();
-  }
-
-  // @UseGuards(AuthGuard, RolesGuard)
-  @Get(`all`)
+  @Get('all')
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get('search')
-  async search(@Query() query: SearchUserDto) {
+  search(@Query() query: SearchUserDto) {
     return this.usersService.findOneByUsername(query.username);
   }
 
-  // @UseGuards(AuthGuard, RolesGuard)
   @Get('id/:id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
-  // @UseGuards(AuthGuard, RolesGuard)
   @Patch('update/:id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+    return this.usersService.update(id, dto);
   }
 
-  // @UseGuards(AuthGuard, RolesGuard)
   @Delete('delete/:id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);

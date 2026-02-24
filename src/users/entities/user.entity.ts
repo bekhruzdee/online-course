@@ -1,9 +1,11 @@
 import { Exclude } from 'class-transformer';
+import { Role } from 'src/roles/entities/role.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -18,8 +20,8 @@ export class User {
   @Exclude()
   @Column({ type: `varchar` })
   password: string;
-  @Column({ type: 'varchar', default: 'user' })
-  role: string;
+  @ManyToOne(() => Role, (role) => role.users)
+  role: Role;
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
 

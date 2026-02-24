@@ -4,6 +4,8 @@ import {
   MinLength,
   MaxLength,
   Matches,
+  IsNumber,
+  IsOptional,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import sanitizeHtml from 'sanitize-html';
@@ -32,4 +34,8 @@ export class CreateAuthDto {
   })
   @Transform(({ value }) => sanitizeHtml(value?.trim()))
   password: string;
+
+  @IsNumber()
+  @IsOptional()
+  roleId?: number;
 }
