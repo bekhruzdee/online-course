@@ -5,5 +5,5 @@ export class CreateRoleDto {
   @IsString()
   name: string;
 
-  permissionIds?: number[];     
+  permissionIds?: number[];
 }

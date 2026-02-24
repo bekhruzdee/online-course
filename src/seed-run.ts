@@ -1,4 +1,3 @@
-// src/seed-run.ts
 import { AppDataSource } from './data-source';
 import { seed } from './seed/seed';
 

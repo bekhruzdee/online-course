@@ -19,11 +19,10 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
 
     @InjectRepository(Role)
-    private readonly roleRepository: Repository<Role>, // ❗ RoleRepository qo‘shildi
+    private readonly roleRepository: Repository<Role>,
 
     private jwtService: JwtService,
   ) {}
-  // 🔹 Register user with default role
   async create(createAuthDto: CreateAuthDto) {
     const existingUser = await this.userRepository.findOne({
       where: { username: createAuthDto.username },
@@ -52,7 +51,6 @@ export class AuthService {
     return 'You are registered✅';
   }
 
-  // 🔹 Login user with RBAC payload
   async login(loginDto: { username: string; password: string }, res: Response) {
     const user = await this.userRepository.findOne({
       where: { username: loginDto.username },
@@ -82,7 +80,6 @@ export class AuthService {
     const { password, ...userData } = user;
     return res.json({ userData, access_token: accessToken });
   }
-
 
   // 🔹 Logout
   logout(): { message: string } {

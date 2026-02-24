@@ -1,4 +1,3 @@
-// src/data-source.ts
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { User } from './users/entities/user.entity';

@@ -9,7 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Role, Permission]),
-    JwtModule.register({}), 
+    JwtModule.register({}),
   ],
   controllers: [RolesController],
   providers: [RolesService],
