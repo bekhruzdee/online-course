@@ -10,6 +10,8 @@ import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { Role } from './roles/entities/role.entity';
 import { Permission } from './permissions/entities/permission.entity';
+import { CoursesModule } from './courses/courses.module';
+import { Course } from './courses/entities/course.entity';
 
 @Module({
   imports: [
@@ -27,7 +29,7 @@ import { Permission } from './permissions/entities/permission.entity';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        entities: [User, Role, Permission],
+        entities: [User, Role, Permission, Course],
         synchronize: true,
       }),
     }),
@@ -36,6 +38,7 @@ import { Permission } from './permissions/entities/permission.entity';
     UsersModule,
     RolesModule,
     PermissionsModule,
+    CoursesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

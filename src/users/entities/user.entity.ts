@@ -1,4 +1,5 @@
 import { Exclude } from 'class-transformer';
+import { Course } from 'src/courses/entities/course.entity';
 import { Role } from 'src/roles/entities/role.entity';
 import {
   Column,
@@ -22,6 +23,9 @@ export class User {
   password: string;
   @ManyToOne(() => Role, (role) => role.users)
   role: Role;
+
+  @OneToMany(() => Course, (course) => course.teacher)
+courses: Course[];
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
 

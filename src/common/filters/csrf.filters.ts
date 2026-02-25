@@ -33,7 +33,7 @@ export class CsrfExceptionFilter implements ExceptionFilter {
       const status = exception.getStatus();
       const body = exception.getResponse();
 
-      console.warn('⚠️ HttpException caught:', body);
+      // console.warn('⚠️ HttpException caught:', body);
 
       return res.status(status).json({
         statusCode: status,
@@ -44,7 +44,7 @@ export class CsrfExceptionFilter implements ExceptionFilter {
     }
 
     // 🔸 Handle all other unknown errors
-    console.error('💥 Internal Server Error:', exception);
+    // console.error('💥 Internal Server Error:', exception);
 
     return res.status(500).json({
       statusCode: 500,
