@@ -70,7 +70,6 @@ export class CoursesService {
     const course = await this.courseRepository.findOne({ where: { id } });
     if (!course) throw new NotFoundException('Course not found ❌');
 
-    // 🔐 Ownership check
     if (course.teacher.id !== user.id) {
       throw new ForbiddenException('You can update only your own course ❌');
     }

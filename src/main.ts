@@ -22,7 +22,7 @@ async function bootstrap() {
       windowMs: 15 * 60 * 1000, // 15 minutes
       limit: 100, // 100 requests per 15 min per IP
       message: 'Too many requests, please try again later.',
-    }),
+    }), 
   );
 
   // 🍪 Cookie parser — cookie o‘qish uchun
