@@ -34,7 +34,7 @@ export class UsersController {
 
   @Get('search')
   search(@Query() query: SearchUserDto) {
-    return this.usersService.findOneByUsername(query.username);
+    return this.usersService.searchByUsername(query.username);
   }
 
   @Get('id/:id')

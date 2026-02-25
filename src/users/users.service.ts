@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -21,11 +21,29 @@ export class UsersService {
     private roleRepository: Repository<Role>,
   ) {}
 
-  async findOneByUsername(username: string): Promise<User | null> {
-    return this.usersRepository.findOne({
-      where: { username },
+  async searchByUsername(username?: string) {
+    if (!username) {
+      throw new NotFoundException('Username query is required ❌');
+    }
+
+    const users = await this.usersRepository.find({
+      where: {
+        username: ILike(`%${username}%`),
+      },
       relations: ['role'],
     });
+
+    if (!users.length) {
+      throw new NotFoundException('No users found ❌');
+    }
+
+    const safeUsers = users.map(({ password, ...rest }) => rest);
+
+    return {
+      success: true,
+      message: 'Users found successfully ✅',
+      data: safeUsers,
+    };
   }
 
   async createUser(dto: CreateUserDto) {
