@@ -12,7 +12,8 @@ import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { RolesGuard, Roles } from 'src/common/guards/role.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @UseGuards(AuthGuard, RolesGuard)
 @Roles('admin')

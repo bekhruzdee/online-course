@@ -15,9 +15,10 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { SearchCourseDto } from './dto/search-course.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { Roles} from 'src/common/guards/role.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
 @Controller('courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
@@ -28,6 +29,7 @@ export class CoursesController {
     return this.coursesService.create(dto, req.user);
   }
 
+  @Roles('admin')
   @Get()
   findAll(@Query() query: SearchCourseDto) {
     return this.coursesService.findAll(query);

@@ -14,7 +14,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SearchUserDto } from './dto/search-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { Roles, RolesGuard } from 'src/common/guards/role.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @UseGuards(AuthGuard, RolesGuard)
 @Roles('admin')

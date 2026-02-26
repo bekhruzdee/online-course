@@ -11,19 +11,11 @@ import {
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { AuthGuard } from './auth.guard';
-import type { Response, Request } from 'express';
-import { SanitizePipe } from 'src/common/pipes/sanitize.pipe';
+import type { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
-  // 🔹 CSRF token endpoint
-  @Get('csrf-token')
-  getCsrfToken(@Req() req: Request) {
-    const csrfToken = (req as any).csrfToken();
-    return { csrfToken };
-  }
 
   // 🔹 Register endpoint, XSS sanitization bilan
   @Post('register')
