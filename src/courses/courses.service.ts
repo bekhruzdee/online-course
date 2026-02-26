@@ -56,7 +56,10 @@ export class CoursesService {
   }
 
   async findOne(id: number) {
-    const course = await this.courseRepository.findOne({ where: { id } });
+    const course = await this.courseRepository.findOne({
+      where: { id },
+      relations: ['teacher'],
+    });
     if (!course) throw new NotFoundException('Course not found ❌');
 
     return {
@@ -101,12 +104,11 @@ export class CoursesService {
   }
 
   async publish(id: number, user: User) {
-    const course = await this.courseRepository.findOne({ where: { id } });
+    const course = await this.courseRepository.findOne({
+      where: { id },
+      relations: ['teacher'],
+    });
     if (!course) throw new NotFoundException('Course not found ❌');
-
-    if (course.teacher.id !== user.id) {
-      throw new ForbiddenException('Not allowed ❌');
-    }
 
     course.status = CourseStatus.PUBLISHED;
     await this.courseRepository.save(course);

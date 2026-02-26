@@ -17,6 +17,7 @@ import { SearchCourseDto } from './dto/search-course.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { RolesGuard } from 'src/common/guards/roles.guard';
+import { CourseOwnerGuard } from 'src/common/guards/course-owner.guard';
 
 @UseGuards(AuthGuard, RolesGuard)
 @Controller('courses')
@@ -53,6 +54,7 @@ export class CoursesController {
   }
 
   @Roles('teacher', 'admin')
+  @UseGuards(CourseOwnerGuard)
   @Patch(':id/publish')
   publish(@Param('id') id: number, @Req() req) {
     return this.coursesService.publish(+id, req.user);
