@@ -1,3 +1,59 @@
+// import {
+//   Controller,
+//   Get,
+//   Post,
+//   Body,
+//   Patch,
+//   Param,
+//   Delete,
+//   UseGuards,
+//   Query,
+// } from '@nestjs/common';
+// import { UsersService } from './users.service';
+// import { UpdateUserDto } from './dto/update-user.dto';
+// import { CreateUserDto } from './dto/create-user.dto';
+// import { SearchUserDto } from './dto/search-user.dto';
+// import { AuthGuard } from 'src/auth/auth.guard';
+// import { RolesGuard } from 'src/common/guards/roles.guard';
+// import { Roles } from 'src/common/decorators/roles.decorator';
+
+// @UseGuards(AuthGuard, RolesGuard)
+// @Roles('admin')
+// @Controller('users')
+// export class UsersController {
+//   constructor(private readonly usersService: UsersService) {}
+
+//   @Post()
+//   createUser(@Body() dto: CreateUserDto) {
+//     return this.usersService.createUser(dto);
+//   }
+
+//   @Get('all')
+//   findAll() {
+//     return this.usersService.findAll();
+//   }
+
+//   @Get('search')
+//   search(@Query() query: SearchUserDto) {
+//     return this.usersService.searchByUsername(query.username);
+//   }
+
+//   @Get('id/:id')
+//   findOne(@Param('id') id: string) {
+//     return this.usersService.findOne(id);
+//   }
+
+//   @Patch('update/:id')
+//   update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+//     return this.usersService.update(id, dto);
+//   }
+
+//   @Delete('delete/:id')
+//   remove(@Param('id') id: string) {
+//     return this.usersService.remove(id);
+//   }
+// }
+
 import {
   Controller,
   Get,
@@ -16,9 +72,10 @@ import { SearchUserDto } from './dto/search-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from 'src/common/enums/role.enum';
 
 @UseGuards(AuthGuard, RolesGuard)
-@Roles('admin')
+@Roles(Role.ADMIN)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -38,17 +95,17 @@ export class UsersController {
     return this.usersService.searchByUsername(query.username);
   }
 
-  @Get('id/:id')
+  @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
-  @Patch('update/:id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     return this.usersService.update(id, dto);
   }
 
-  @Delete('delete/:id')
+  @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }

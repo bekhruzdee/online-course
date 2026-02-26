@@ -1,6 +1,7 @@
-import { IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 import sanitizeHtml from 'sanitize-html';
+import { Role } from 'src/common/enums/role.enum';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -14,6 +15,7 @@ export class CreateUserDto {
   @MinLength(6)
   password: string;
 
-  @IsNotEmpty()
-  roleId: number;
+  @IsEnum(Role)
+  @IsOptional()
+  role?: Role;
 }

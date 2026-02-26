@@ -6,10 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
-import { RolesModule } from './roles/roles.module';
-import { PermissionsModule } from './permissions/permissions.module';
-import { Role } from './roles/entities/role.entity';
-import { Permission } from './permissions/entities/permission.entity';
 import { CoursesModule } from './courses/courses.module';
 import { Course } from './courses/entities/course.entity';
 
@@ -29,15 +25,13 @@ import { Course } from './courses/entities/course.entity';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        entities: [User, Role, Permission, Course],
+        entities: [User, Course],
         synchronize: true,
       }),
     }),
 
     AuthModule,
     UsersModule,
-    RolesModule,
-    PermissionsModule,
     CoursesModule,
   ],
   controllers: [AppController],

@@ -34,8 +34,4 @@ export class CreateAuthDto {
   })
   @Transform(({ value }) => sanitizeHtml(value?.trim()))
   password: string;
-
-  @IsNumber()
-  @IsOptional()
-  roleId?: number;
 }

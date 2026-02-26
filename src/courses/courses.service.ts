@@ -1,7 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-  ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, ILike } from 'typeorm';
@@ -68,14 +67,9 @@ export class CoursesService {
       data: course,
     };
   }
-
   async update(id: number, dto: UpdateCourseDto, user: User) {
     const course = await this.courseRepository.findOne({ where: { id } });
     if (!course) throw new NotFoundException('Course not found ❌');
-
-    if (course.teacher.id !== user.id) {
-      throw new ForbiddenException('You can update only your own course ❌');
-    }
 
     Object.assign(course, dto);
     const updated = await this.courseRepository.save(course);
@@ -90,10 +84,6 @@ export class CoursesService {
   async remove(id: number, user: User) {
     const course = await this.courseRepository.findOne({ where: { id } });
     if (!course) throw new NotFoundException('Course not found ❌');
-
-    if (course.teacher.id !== user.id) {
-      throw new ForbiddenException('You can delete only your own course ❌');
-    }
 
     await this.courseRepository.remove(course);
 
