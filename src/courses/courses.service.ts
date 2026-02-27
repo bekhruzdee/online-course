@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, ILike } from 'typeorm';
 import { Course, CourseStatus } from './entities/course.entity';
@@ -32,24 +29,14 @@ export class CoursesService {
     };
   }
 
-  async findAll(query: SearchCourseDto) {
-    const { title, status } = query;
-
-    const where: any = {};
-
-    if (title) {
-      where.title = ILike(`%${title}%`);
-    }
-
-    if (status) {
-      where.status = status;
-    }
-
-    const courses = await this.courseRepository.find({ where });
+  async findAll() {
+    const courses = await this.courseRepository.find({
+      // relations: ['teacher'],
+    });
 
     return {
       success: true,
-      message: 'Courses retrieved successfully ✅',
+      message: 'All courses retrieved successfully ✅',
       data: courses,
     };
   }
@@ -57,7 +44,7 @@ export class CoursesService {
   async findOne(id: number) {
     const course = await this.courseRepository.findOne({
       where: { id },
-      relations: ['teacher'],
+      // relations: ['teacher'],
     });
     if (!course) throw new NotFoundException('Course not found ❌');
 
@@ -65,6 +52,27 @@ export class CoursesService {
       success: true,
       message: 'Course retrieved successfully ✅',
       data: course,
+    };
+  }
+
+  async findByTitle(query: SearchCourseDto) {
+    const { title } = query;
+
+    const where: any = {};
+
+    if (title) {
+      where.title = ILike(`%${title}%`);
+    }
+
+    const courses = await this.courseRepository.find({
+      where,
+      // relations: ['teacher'],
+    });
+
+    return {
+      success: true,
+      message: 'Courses retrieved successfully ✅',
+      data: courses,
     };
   }
   async update(id: number, dto: UpdateCourseDto, user: User) {

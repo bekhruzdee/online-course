@@ -33,8 +33,14 @@ export class CoursesController {
 
   @Roles(Role.ADMIN)
   @Get()
-  findAll(@Query() query: SearchCourseDto) {
-    return this.coursesService.findAll(query);
+  findAll() {
+    return this.coursesService.findAll();
+  }
+
+  @Roles(Role.ADMIN)
+  @Get('search')
+  findByTitle(@Query() query: SearchCourseDto) {
+    return this.coursesService.findByTitle(query);
   }
 
   @Roles(Role.TEACHER, Role.ADMIN)
