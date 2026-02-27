@@ -23,12 +23,11 @@ export class AuthController {
     return this.authService.login(loginDto, res);
   }
 
-  // 🔹 Logout endpoint, faqat auth guard bilan
   @Post('logout')
   @UseGuards(AuthGuard)
   logout(@Res() res: Response) {
     const result = this.authService.logout();
-    res.clearCookie('refresh_token'); // token cookie-ni tozalash
+    res.clearCookie('refresh_token');
     return res.status(200).json(result);
   }
 }

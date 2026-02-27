@@ -20,7 +20,6 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  // 🔹 REGISTER
   async create(createAuthDto: CreateAuthDto) {
     const existingUser = await this.userRepository.findOne({
       where: { username: createAuthDto.username },
@@ -33,7 +32,7 @@ export class AuthService {
     const user = this.userRepository.create({
       username: createAuthDto.username,
       password: await bcrypt.hash(createAuthDto.password, 12),
-      role: Role.STUDENT, // default role
+      role: Role.STUDENT,
     });
 
     await this.userRepository.save(user);
@@ -44,7 +43,6 @@ export class AuthService {
     };
   }
 
-  // 🔹 LOGIN
   async login(loginDto: { username: string; password: string }, res: Response) {
     const user = await this.userRepository.findOne({
       where: { username: loginDto.username },
@@ -62,7 +60,7 @@ export class AuthService {
 
     const payload = {
       id: user.id,
-      role: user.role, // enum
+      role: user.role,
     };
 
     const accessToken = this.jwtService.sign(payload, {
@@ -88,12 +86,10 @@ export class AuthService {
     });
   }
 
-  // 🔹 LOGOUT
   logout(): { message: string } {
     return { message: 'Logout successfully ✅' };
   }
 
-  // 🔹 GET CURRENT USER
   async getAllMyData(payload: any) {
     return this.userRepository.findOne({
       where: { id: payload.id },

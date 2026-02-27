@@ -3,9 +3,7 @@ import {
   IsString,
   MinLength,
   MaxLength,
-  Matches,
-  IsNumber,
-  IsOptional,
+  Matches
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import sanitizeHtml from 'sanitize-html';
