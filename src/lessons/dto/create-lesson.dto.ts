@@ -1,15 +1,14 @@
-import { 
-  IsNotEmpty, 
-  IsInt, 
-  IsString, 
-  IsUrl, 
-  Min, 
-  MaxLength 
+import {
+  IsNotEmpty,
+  IsInt,
+  IsString,
+  IsUrl,
+  Min,
+  MaxLength,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateLessonDto {
-
   @IsString()
   @IsNotEmpty()
   @MaxLength(150)
