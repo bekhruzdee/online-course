@@ -10,6 +10,8 @@ import { CoursesModule } from './courses/courses.module';
 import { Course } from './courses/entities/course.entity';
 import { LessonsModule } from './lessons/lessons.module';
 import { Lesson } from './lessons/entities/lesson.entity';
+import { EnrollmentsModule } from './enrollments/enrollments.module';
+import { Enrollment } from './enrollments/entities/enrollment.entity';
 
 @Module({
   imports: [
@@ -27,7 +29,7 @@ import { Lesson } from './lessons/entities/lesson.entity';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        entities: [User, Course, Lesson],
+        entities: [User, Course, Lesson, Enrollment],
         synchronize: true,
       }),
     }),
@@ -36,6 +38,7 @@ import { Lesson } from './lessons/entities/lesson.entity';
     UsersModule,
     CoursesModule,
     LessonsModule,
+    EnrollmentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

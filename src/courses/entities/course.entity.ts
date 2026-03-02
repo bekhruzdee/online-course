@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Lesson } from 'src/lessons/entities/lesson.entity';
+import { Enrollment } from 'src/enrollments/entities/enrollment.entity';
 
 export enum CourseStatus {
   DRAFT = 'draft',
@@ -45,6 +46,9 @@ export class Course {
 
   @OneToMany(() => Lesson, (lesson) => lesson.course)
   lessons: Lesson[];
+
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.course)
+  enrollments: Enrollment[];
 
   @CreateDateColumn()
   createdAt: Date;
