@@ -6,8 +6,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Index,
+  OneToMany,
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
+import { Lesson } from 'src/lessons/entities/lesson.entity';
 
 export enum CourseStatus {
   DRAFT = 'draft',
@@ -40,6 +42,9 @@ export class Course {
     onDelete: 'CASCADE',
   })
   teacher: User;
+
+  @OneToMany(() => Lesson, (lesson) => lesson.course)
+  lessons: Lesson[];
 
   @CreateDateColumn()
   createdAt: Date;

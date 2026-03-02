@@ -8,6 +8,8 @@ import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
 import { CoursesModule } from './courses/courses.module';
 import { Course } from './courses/entities/course.entity';
+import { LessonsModule } from './lessons/lessons.module';
+import { Lesson } from './lessons/entities/lesson.entity';
 
 @Module({
   imports: [
@@ -25,7 +27,7 @@ import { Course } from './courses/entities/course.entity';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        entities: [User, Course],
+        entities: [User, Course, Lesson],
         synchronize: true,
       }),
     }),
@@ -33,6 +35,7 @@ import { Course } from './courses/entities/course.entity';
     AuthModule,
     UsersModule,
     CoursesModule,
+    LessonsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
