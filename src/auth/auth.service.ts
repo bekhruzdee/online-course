@@ -64,7 +64,7 @@ export class AuthService {
     };
 
     const accessToken = this.jwtService.sign(payload, {
-      expiresIn: '1d',
+      expiresIn: '15m',
     });
 
     const refreshToken = this.jwtService.sign(payload, {
@@ -79,15 +79,10 @@ export class AuthService {
     });
 
     const { password, ...userData } = user;
-
-    return res.json({
+    return {
       user: userData,
       access_token: accessToken,
-    });
-  }
-
-  logout(): { message: string } {
-    return { message: 'Logout successfully ✅' };
+    };
   }
 
   async getAllMyData(payload: any) {
