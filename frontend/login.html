@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Auth Page</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="auth-wrapper">
+      <div class="auth-card" id="auth-card">
+        <div id="login-form">
+          <h2>Welcome Back 👋</h2>
+
+          <button class="google-btn" id="google-login">
+            <img
+              src="https://www.svgrepo.com/show/475656/google-color.svg"
+              alt="Google"
+            />
+            Continue with Google
+          </button>
+
+          <div class="divider">
+            <span>OR</span>
+          </div>
+
+          <input type="text" id="login-username" placeholder="Username" />
+          <input type="password" id="login-password" placeholder="Password" />
+          <button class="primary-btn" id="manual-login">Login</button>
+
+          <p class="switch-text">
+            Don't have account? <span id="go-register">Register</span>
+          </p>
+        </div>
+
+        <div id="register-form" class="hidden">
+          <h2>Create Account 🚀</h2>
+
+          <input type="text" id="register-username" placeholder="Username" />
+          <input
+            type="password"
+            id="register-password"
+            placeholder="Password"
+          />
+          <button class="primary-btn" id="register-btn">Register</button>
+
+          <p class="switch-text">
+            Already have account? <span id="go-login">Login</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="welcome hidden" id="welcome-page">
+        <h1 id="welcome-text"></h1>
+        <button class="logout-btn" id="logout-btn">Logout</button>
+      </div>
+    </div>
+
+    <script src="login.js"></script>
+  </body>
+</html>

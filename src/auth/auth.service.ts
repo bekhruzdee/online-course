@@ -90,4 +90,34 @@ export class AuthService {
       where: { id: payload.id },
     });
   }
+
+
+async validateGoogleUser(profile: any) {
+  const { id, emails, displayName } = profile;
+  const email = emails[0].value;
+
+  let user = await this.userRepository.findOne({
+    where: { username: email },
+  });
+
+  if (!user) {
+    user = this.userRepository.create({
+      username: email,
+      provider: 'google',
+      providerId: id,
+      role: Role.STUDENT,
+      // password optional bo‘lgani uchun null berish mumkin
+      password: undefined,
+    });
+    await this.userRepository.save(user);
+  }
+
+  const payload = { id: user.id, role: user.role };
+  const accessToken = this.jwtService.sign(payload, {
+    secret: process.env.JWT_SECRET,
+    expiresIn: '15m', // string bilan ishlaydi
+  });
+
+  return { user, accessToken };
+}
 }

@@ -1,8 +1,9 @@
-import { Controller, Post, Body, UseGuards, Res } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Res, Get, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { AuthGuard } from './auth.guard';
 import type { Response } from 'express';
+import { GoogleAuthGuard } from './google.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -30,4 +31,26 @@ export class AuthController {
       message: 'Logout successfully ✅',
     };
   }
+
+  // Google OAuth
+  @Get('google')
+  @UseGuards(GoogleAuthGuard)
+  googleLogin() {}
+
+ @Get('google/callback')
+@UseGuards(GoogleAuthGuard)
+googleCallback(@Req() req, @Res() res: Response) {
+  const { accessToken, user } = req.user;
+
+  // Frontendga redirect + query params orqali ma'lumot yuboramiz
+  const frontendUrl = 'http://localhost:3000/login.html';  // yoki '/' agar index.html bo'lsa
+
+  const params = new URLSearchParams({
+    welcome: 'true',
+    username: user.username.split('@')[0] || user.username,  // faqat ism qismi
+    token: accessToken,  // agar keyin kerak bo'lsa
+  });
+
+  return res.redirect(`${frontendUrl}?${params.toString()}`);
+}
 }
