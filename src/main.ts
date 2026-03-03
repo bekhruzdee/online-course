@@ -52,20 +52,15 @@ import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express'; // ← muhim!
 
 async function bootstrap() {
-  // NestExpressApplication tipini majburiy ishlatamiz
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Statik fayllarni frontend papkasidan xizmat qilamiz (prefixsiz)
   app.useStaticAssets(join(__dirname, '..', 'frontend'));
-
-  // Agar /frontend prefixini saqlamoqchi bo'lsangiz:
-  // app.useStaticAssets(join(__dirname, '..', 'frontend'), { prefix: '/frontend/' });
 
   app.use(helmet());
 
   app.use(
     rateLimit({
-      windowMs: 15 * 60 * 1000, // 15 daqiqa
+      windowMs: 15 * 60 * 1000,
       limit: 100,
       message: 'Juda ko‘p so‘rov, keyinroq urinib ko‘ring.',
     }),

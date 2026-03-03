@@ -47,11 +47,11 @@ import { GoogleAuthGuard } from './google.guard';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
-        const expiresInEnv = config.get<string>('JWT_EXPIRES_IN') || '3600'; // sekundda string
+        const expiresInEnv = config.get<string>('JWT_EXPIRES_IN') || '3600';
         return {
           secret: config.get<string>('JWT_SECRET') || 'default_secret',
           signOptions: {
-            expiresIn: Number(expiresInEnv), // string → number
+            expiresIn: Number(expiresInEnv),
           },
         };
       },
