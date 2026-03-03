@@ -14,6 +14,24 @@ document.getElementById('go-login').onclick = () => {
   loginForm.classList.remove('hidden');
 };
 
+function setupToggle(toggleId, inputId) {
+  const toggle = document.getElementById(toggleId);
+  const input = document.getElementById(inputId);
+
+  toggle.onclick = () => {
+    if (input.type === 'password') {
+      input.type = 'text';
+      toggle.textContent = '🙈';
+    } else {
+      input.type = 'password';
+      toggle.textContent = '👁';
+    }
+  };
+}
+
+setupToggle('toggle-login-password', 'login-password');
+setupToggle('toggle-register-password', 'register-password');
+
 document.getElementById('google-login').onclick = () => {
   window.location.href = 'http://localhost:3000/auth/google';
 };
@@ -66,6 +84,11 @@ if (token && usernameFromCallback) {
   localStorage.setItem('username', usernameFromCallback);
   showWelcome(usernameFromCallback);
   window.history.replaceState({}, document.title, window.location.pathname);
+}
+
+const savedUser = localStorage.getItem('username');
+if (savedUser) {
+  showWelcome(savedUser);
 }
 
 function showWelcome(username) {

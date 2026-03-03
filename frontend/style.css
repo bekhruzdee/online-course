@@ -8,6 +8,10 @@ body {
   background: linear-gradient(135deg, #667eea, #764ba2);
 }
 
+* {
+  box-sizing: border-box;
+}
+
 .auth-wrapper {
   width: 400px;
 }
@@ -31,11 +35,44 @@ h2 {
 
 input {
   width: 100%;
-  padding: 14px;
+  padding: 14px 14px;
   margin: 10px 0;
   border-radius: 10px;
   border: 1px solid #ddd;
   font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.15);
+}
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.password-wrapper input {
+  margin: 0;
+  padding-right: 45px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  opacity: 0.6;
+  font-size: 16px;
+  transition: 0.2s;
+}
+
+.toggle-password:hover {
+  opacity: 1;
 }
 
 .google-btn {
@@ -86,7 +123,6 @@ input {
   background: #eee;
   top: 50%;
   left: 0;
-  z-index: 0;
 }
 
 .primary-btn {
