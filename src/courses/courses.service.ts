@@ -97,7 +97,7 @@ export class CoursesService {
     };
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const course = await this.courseRepository.findOne({
       where: { id },
       relations: ['teacher'],
@@ -128,7 +128,7 @@ export class CoursesService {
     };
   }
 
-  async update(id: number, dto: UpdateCourseDto, user: User) {
+  async update(id: string, dto: UpdateCourseDto, user: User) {
     const course = await this.courseRepository.findOne({
       where: { id },
       relations: ['teacher'],
@@ -154,7 +154,7 @@ export class CoursesService {
     };
   }
 
-  async remove(id: number, user: User) {
+  async remove(id: string, user: User) {
     const course = await this.courseRepository.findOne({
       where: { id },
       relations: ['teacher'],
@@ -178,7 +178,7 @@ export class CoursesService {
     };
   }
 
-  async publish(id: number, user: User) {
+  async publish(id: string, user: User) {
     const course = await this.courseRepository.findOne({
       where: { id },
       relations: ['teacher'],

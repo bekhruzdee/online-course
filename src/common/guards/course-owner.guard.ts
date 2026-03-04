@@ -20,7 +20,7 @@ export class CourseOwnerGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    const id = +request.params.id;
+    const id = request.params.id; // UUID - no need to convert
 
     const course = await this.courseRepository.findOne({
       where: { id },

@@ -1,12 +1,10 @@
 import {
   IsNotEmpty,
-  IsInt,
   IsString,
   IsUrl,
-  Min,
+  IsUUID,
   MaxLength,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 
 export class CreateLessonDto {
   @IsString()
@@ -20,8 +18,7 @@ export class CreateLessonDto {
   @MaxLength(500)
   contentUrl: string;
 
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  courseId: number;
+  @IsUUID()
+  @IsNotEmpty()
+  courseId: string;
 }

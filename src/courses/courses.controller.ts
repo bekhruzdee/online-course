@@ -9,6 +9,7 @@ import {
   Query,
   Req,
   UseGuards,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -45,26 +46,26 @@ export class CoursesController {
 
   @Roles(Role.TEACHER, Role.ADMIN)
   @Patch(':id')
-  update(@Param('id') id: number, @Body() dto: UpdateCourseDto, @Req() req) {
-    return this.coursesService.update(+id, dto, req.user);
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateCourseDto, @Req() req) {
+    return this.coursesService.update(id, dto, req.user);
   }
 
   @Roles(Role.TEACHER, Role.ADMIN)
   @Delete(':id')
-  remove(@Param('id') id: number, @Req() req) {
-    return this.coursesService.remove(+id, req.user);
+  remove(@Param('id', ParseUUIDPipe) id: string, @Req() req) {
+    return this.coursesService.remove(id, req.user);
   }
 
   @Roles(Role.ADMIN)
   @UseGuards(CourseOwnerGuard)
   @Patch(':id/publish')
-  publish(@Param('id') id: number, @Req() req) {
-    return this.coursesService.publish(+id, req.user);
+  publish(@Param('id', ParseUUIDPipe) id: string, @Req() req) {
+    return this.coursesService.publish(id, req.user);
   }
 
   @Roles(Role.ADMIN, Role.TEACHER)
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.coursesService.findOne(+id);
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.coursesService.findOne(id);
   }
 }

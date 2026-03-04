@@ -8,7 +8,7 @@ import {
   Body,
   Req,
   UseGuards,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Query,
 } from '@nestjs/common';
 import { LessonsService } from './lessons.service';
@@ -32,14 +32,14 @@ export class LessonsController {
 
   @Roles(Role.TEACHER, Role.ADMIN)
   @Get('course/:courseId')
-  findAllByCourse(@Param('courseId', ParseIntPipe) courseId: number) {
+  findAllByCourse(@Param('courseId', ParseUUIDPipe) courseId: string) {
     return this.lessonsService.findAllByCourse(courseId);
   }
 
   @Roles(Role.TEACHER, Role.ADMIN)
   @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateLessonDto,
     @Req() req,
   ) {
@@ -48,13 +48,13 @@ export class LessonsController {
 
   @Roles(Role.TEACHER, Role.ADMIN)
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number, @Req() req) {
+  remove(@Param('id', ParseUUIDPipe) id: string, @Req() req) {
     return this.lessonsService.remove(id, req.user);
   }
 
   @Roles(Role.TEACHER, Role.ADMIN)
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.lessonsService.findOne(id);
   }
 }

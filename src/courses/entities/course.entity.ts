@@ -19,8 +19,8 @@ export enum CourseStatus {
 
 @Entity('courses')
 export class Course {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Index()
   @Column()

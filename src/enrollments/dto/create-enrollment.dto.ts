@@ -1,9 +1,7 @@
-import { IsInt, Min } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsUUID, IsNotEmpty } from 'class-validator';
 
 export class CreateEnrollmentDto {
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  courseId: number;
+  @IsUUID()
+  @IsNotEmpty()
+  courseId: string;
 }

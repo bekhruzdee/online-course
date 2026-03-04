@@ -42,14 +42,14 @@ export class LessonsService {
     return this.lessonRepository.save(lesson);
   }
 
-  async findAllByCourse(courseId: number) {
+  async findAllByCourse(courseId: string) {
     return this.lessonRepository.find({
       where: { course: { id: courseId } },
       order: { id: 'ASC' },
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const lesson = await this.lessonRepository.findOne({
       where: { id },
       relations: ['course', 'course.teacher'],
@@ -58,7 +58,7 @@ export class LessonsService {
     return lesson;
   }
 
-  async update(id: number, dto: UpdateLessonDto, user: any) {
+  async update(id: string, dto: UpdateLessonDto, user: any) {
     const lesson = await this.lessonRepository.findOne({
       where: { id },
       relations: ['course', 'course.teacher'],
@@ -75,7 +75,7 @@ export class LessonsService {
     return this.lessonRepository.save(lesson);
   }
 
-  async remove(id: number, user: any) {
+  async remove(id: string, user: any) {
     const lesson = await this.lessonRepository.findOne({
       where: { id },
       relations: ['course', 'course.teacher'],
