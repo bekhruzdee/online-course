@@ -5,16 +5,27 @@ import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { SanitizePipe } from './common/pipes/sanitize.pipe';
+import { GlobalExceptionFilter } from './common/filters/http-exception.filter';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: ['error', 'warn', 'log'],
+  });
 
   app.useStaticAssets(join(process.cwd(), 'frontend'));
 
   // 🛡 Security
   app.use(helmet());
+
+  // CORS Configuration
+  app.enableCors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
 
   app.use(
     rateLimit({
@@ -25,6 +36,8 @@ async function bootstrap() {
   );
 
   app.use(cookieParser());
+
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 

@@ -40,19 +40,28 @@ document.getElementById('manual-login').onclick = async () => {
   const username = document.getElementById('login-username').value;
   const password = document.getElementById('login-password').value;
 
-  const res = await fetch('http://localhost:3000/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
-  });
+  try {
+    const res = await fetch('http://localhost:3000/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
 
-  if (res.ok) {
     const data = await res.json();
-    localStorage.setItem('accessToken', data.access_token);
-    localStorage.setItem('username', data.user.username);
-    showWelcome(data.user.username);
-  } else {
-    alert('Login failed ❌');
+
+    if (res.ok) {
+      localStorage.setItem('accessToken', data.access_token);
+      localStorage.setItem('username', data.user.username);
+      showWelcome(data.user.username);
+    } else {
+      const errorMsg = Array.isArray(data.message)
+        ? data.message.join('\n')
+        : data.message || 'Login failed ❌';
+      alert(errorMsg);
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    alert('Network error! Check if backend is running ❌');
   }
 };
 
@@ -60,18 +69,36 @@ document.getElementById('register-btn').onclick = async () => {
   const username = document.getElementById('register-username').value;
   const password = document.getElementById('register-password').value;
 
-  const res = await fetch('http://localhost:3000/auth/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
-  });
+  if (!username || !password) {
+    alert('Please fill in all fields!');
+    return;
+  }
 
-  if (res.ok) {
-    alert('Registered successfully ✅');
-    registerForm.classList.add('hidden');
-    loginForm.classList.remove('hidden');
-  } else {
-    alert('Register failed ❌');
+  try {
+    const res = await fetch('http://localhost:3000/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert('Registered successfully ✅\nNow you can login!');
+      registerForm.classList.add('hidden');
+      loginForm.classList.remove('hidden');
+      // Clear inputs
+      document.getElementById('register-username').value = '';
+      document.getElementById('register-password').value = '';
+    } else {
+      const errorMsg = Array.isArray(data.message)
+        ? data.message.join('\n')
+        : data.message || 'Register failed ❌';
+      alert(errorMsg);
+    }
+  } catch (error) {
+    console.error('Register error:', error);
+    alert('Network error! Check if backend is running ❌');
   }
 };
 
@@ -94,6 +121,7 @@ if (savedUser) {
 function showWelcome(username) {
   authCard.classList.add('hidden');
   welcomePage.classList.remove('hidden');
+  // Prevent XSS by using textContent instead of innerHTML
   welcomeText.textContent = `Welcome, ${username}! 🎉`;
 }
 

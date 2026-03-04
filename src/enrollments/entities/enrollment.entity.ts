@@ -12,8 +12,8 @@ import { Course } from 'src/courses/entities/course.entity';
 @Entity('enrollments')
 @Unique(['user', 'course'])
 export class Enrollment {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => User, (user) => user.enrollments, {
     onDelete: 'CASCADE',

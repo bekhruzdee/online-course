@@ -17,10 +17,6 @@
 // });
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { User } from 'src/users/entities/user.entity';
-import { Course } from 'src/courses/entities/course.entity';
-import { Lesson } from 'src/lessons/entities/lesson.entity';
-import { Enrollment } from 'src/enrollments/entities/enrollment.entity';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -35,11 +31,15 @@ const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
 
-  entities: [User, Course, Lesson, Enrollment],
+  entities: isProd
+    ? ['dist/**/*.entity.js']
+    : ['src/**/*.entity.ts'],
 
-  migrations: isProd
-    ? ['dist/migrations/*.js'] // production
-    : ['db/migrations/*.ts'], // development
+  migrations: ['db/migrations/*.ts'],
+
+  // migrations: isProd
+  //   ? ['dist/migrations/*.js'] // production
+  //   : ['db/migrations/*.ts'], // development
 
   synchronize: false,
 });

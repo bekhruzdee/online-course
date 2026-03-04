@@ -52,6 +52,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials ❌');
     }
 
+    if (!user.password) {
+      throw new UnauthorizedException('This account uses social login ❌');
+    }
+
     const checkPass = await bcrypt.compare(loginDto.password, user.password);
 
     if (!checkPass) {
