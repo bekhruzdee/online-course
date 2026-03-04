@@ -30,7 +30,7 @@ import { Enrollment } from './enrollments/entities/enrollment.entity';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
         entities: [User, Course, Lesson, Enrollment],
-        synchronize: true,
+        synchronize: false,
       }),
     }),
 

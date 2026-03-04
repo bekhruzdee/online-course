@@ -58,14 +58,14 @@ export class User {
   username: string;
 
   @Exclude()
-  @Column({ type: 'varchar', nullable: true }) // nullable bo‘ldi, Google OAuth uchun kerak
+  @Column({ type: 'varchar', nullable: true }) 
   password?: string;
 
   @Column({ type: 'enum', enum: Role, default: Role.STUDENT })
   role: Role;
 
   @Column({ nullable: true })
-  provider?: string; // 'local' | 'google'
+  provider?: string; 
 
   @Column({ nullable: true })
   providerId?: string;
