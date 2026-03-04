@@ -38,10 +38,10 @@ const AppDataSource = new DataSource({
   entities: [User, Course, Lesson, Enrollment],
 
   migrations: isProd
-    ? ['dist/migrations/*.js']  // production
-    : ['db/migrations/*.ts'],  // development
+    ? ['dist/migrations/*.js'] // production
+    : ['db/migrations/*.ts'], // development
 
-  synchronize: false
+  synchronize: false,
 });
 
 export default AppDataSource;

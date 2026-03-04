@@ -11,7 +11,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.useStaticAssets(join(__dirname, '..', 'frontend'));
+  app.useStaticAssets(join(process.cwd(), 'frontend'));
 
   // 🛡 Security
   app.use(helmet());

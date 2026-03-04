@@ -51,7 +51,6 @@ export class UsersService {
       throw new ConflictException('User already exists ❌');
     }
 
-    
     if (dto.role === Role.ADMIN) {
       throw new ConflictException('Cannot create admin via API ❌');
     }
