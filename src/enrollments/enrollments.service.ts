@@ -49,9 +49,23 @@ export class EnrollmentsService {
   }
 
   async myCourses(user: User) {
-    return this.enrollmentRepo.find({
+    const enrollments = await this.enrollmentRepo.find({
       where: { user: { id: user.id } },
       relations: ['course'],
     });
+
+    if (enrollments.length === 0) {
+      return {
+        success: true,
+        message: 'You are not enrolled in any courses yet',
+        data: [],
+      };
+    }
+
+    return {
+      success: true,
+      message: 'Your enrolled courses retrieved successfully',
+      data: enrollments,
+    };
   }
 }
