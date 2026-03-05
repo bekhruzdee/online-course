@@ -9,9 +9,8 @@ export async function seed(dataSource: DataSource) {
   const userRepo = dataSource.getRepository(User);
 
   // 1️⃣ SUPERADMIN
-  const superAdminUsername = process.env.SUPER_ADMIN_USERNAME || 'superadmin';
-  const superAdminPassword =
-    process.env.SUPER_ADMIN_PASSWORD || 'supersecure123';
+  const superAdminUsername = process.env.SUPER_ADMIN_USERNAME;
+  const superAdminPassword = process.env.SUPER_ADMIN_PASSWORD;
 
   const existingSuperAdmin = await userRepo.findOne({
     where: { username: superAdminUsername },
@@ -30,10 +29,15 @@ export async function seed(dataSource: DataSource) {
     console.log('✔ Superadmin already exists');
   }
 
-  // 2️⃣ DEFAULT TEACHERS
   const defaultTeachers = [
-    { username: 'Shirin', password: 'Shirin123!' },
-    { username: 'Touka', password: 'Touka123!' },
+    {
+      username: 'Shirin',
+      password: process.env.TEACHER_SHIRIN_PASSWORD,
+    },
+    {
+      username: 'Touka',
+      password: process.env.TEACHER_TOUKA_PASSWORD,
+    },
   ];
 
   for (const t of defaultTeachers) {
