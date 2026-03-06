@@ -180,38 +180,6 @@ frontend/             # Simple HTML/JS frontend
 
 ---
 
-## 🔑 Environment Variables
-
-```env
-# Database
-DB_HOST=localhost
-DB_PORT=5432
-DB_USERNAME=postgres
-DB_PASSWORD=your_password
-DB_DATABASE=online_course
-
-# JWT
-JWT_SECRET=your_super_secret_key_min_32_chars
-JWT_EXPIRES_IN=15m
-JWT_REFRESH_EXPIRES_IN=7d
-
-# Server
-NODE_ENV=development
-PORT=3000
-FRONTEND_URL=http://localhost:3000
-
-# Admin Account
-SUPER_ADMIN_USERNAME=admin
-SUPER_ADMIN_PASSWORD=Admin@123
-
-# Google OAuth (optional)
-GOOGLE_CLIENT_ID=your_client_id
-GOOGLE_CLIENT_SECRET=your_client_secret
-GOOGLE_CALLBACK_URL=http://localhost:3000/auth/google/callback
-```
-
----
-
 ## 🛡️ Security Features
 
 ### Input Validation
