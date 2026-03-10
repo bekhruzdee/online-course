@@ -43,6 +43,7 @@ document.getElementById('manual-login').onclick = async () => {
   try {
     const res = await fetch('http://localhost:3000/auth/login', {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
     });
@@ -50,7 +51,6 @@ document.getElementById('manual-login').onclick = async () => {
     const data = await res.json();
 
     if (res.ok) {
-      localStorage.setItem('accessToken', data.access_token);
       localStorage.setItem('username', data.user.username);
       showWelcome(data.user.username);
     } else {
@@ -103,11 +103,9 @@ document.getElementById('register-btn').onclick = async () => {
 };
 
 const params = new URLSearchParams(window.location.search);
-const token = params.get('token');
 const usernameFromCallback = params.get('username');
 
-if (token && usernameFromCallback) {
-  localStorage.setItem('accessToken', token);
+if (usernameFromCallback) {
   localStorage.setItem('username', usernameFromCallback);
   showWelcome(usernameFromCallback);
   window.history.replaceState({}, document.title, window.location.pathname);
@@ -125,10 +123,17 @@ function showWelcome(username) {
   welcomeText.textContent = `Welcome, ${username}! 🎉`;
 }
 
-document.getElementById('logout-btn').onclick = () => {
-  localStorage.clear();
-  welcomePage.classList.add('hidden');
-  authCard.classList.remove('hidden');
-  registerForm.classList.add('hidden');
-  loginForm.classList.remove('hidden');
+document.getElementById('logout-btn').onclick = async () => {
+  try {
+    await fetch('http://localhost:3000/auth/logout', {
+      method: 'POST',
+      credentials: 'include',
+    });
+  } finally {
+    localStorage.clear();
+    welcomePage.classList.add('hidden');
+    authCard.classList.remove('hidden');
+    registerForm.classList.add('hidden');
+    loginForm.classList.remove('hidden');
+  }
 };

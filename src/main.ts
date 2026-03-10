@@ -8,11 +8,13 @@ import { SanitizePipe } from './common/pipes/sanitize.pipe';
 import { GlobalExceptionFilter } from './common/filters/http-exception.filter';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: ['error', 'warn', 'log'],
+    bufferLogs: true,
   });
+  app.useLogger(app.get(Logger));
 
   app.useStaticAssets(join(process.cwd(), 'frontend'));
 
@@ -53,7 +55,7 @@ async function bootstrap() {
   const PORT = process.env.PORT || 3000;
   await app.listen(PORT);
 
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  app.get(Logger).log(`Server running on http://localhost:${PORT}`);
 }
 
 bootstrap();
