@@ -87,7 +87,6 @@ document.getElementById('register-btn').onclick = async () => {
       alert('Registered successfully ✅\nNow you can login!');
       registerForm.classList.add('hidden');
       loginForm.classList.remove('hidden');
-      // Clear inputs
       document.getElementById('register-username').value = '';
       document.getElementById('register-password').value = '';
     } else {
@@ -119,7 +118,6 @@ if (savedUser) {
 function showWelcome(username) {
   authCard.classList.add('hidden');
   welcomePage.classList.remove('hidden');
-  // Prevent XSS by using textContent instead of innerHTML
   welcomeText.textContent = `Welcome, ${username}! 🎉`;
 }
 
