@@ -283,19 +283,6 @@ DELETE /enrollments/:id        # Remove enrollment
 
 ## 👥 Default Users (after seed)
 
-```javascript
-// Admin account
-Username: admin (or SUPER_ADMIN_USERNAME from .env)
-Password: Admin@123 (or SUPER_ADMIN_PASSWORD from .env)
-Role: ADMIN
-
-// Test users (optional)
-Teacher: teacher / Teacher@123
-Student: student / Student@123
-```
-
----
-
 ## 🧪 Testing
 
 ```bash
@@ -321,12 +308,6 @@ pnpm run test:cov
 
 ---
 
-## 🚀 Deployment Tips
-
-### Environment
-```bash
-NODE_ENV=production
-```
 
 ### Database
 - Use SSL connection
