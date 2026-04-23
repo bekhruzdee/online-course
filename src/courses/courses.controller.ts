@@ -44,9 +44,19 @@ export class CoursesController {
     return this.coursesService.findByTitle(query);
   }
 
+  @Roles(Role.TEACHER)
+  @Get('my')
+  findMyCourses(@Req() req) {
+    return this.coursesService.findMyCourses(req.user);
+  }
+
   @Roles(Role.TEACHER, Role.ADMIN)
   @Patch(':id')
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateCourseDto, @Req() req) {
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateCourseDto,
+    @Req() req,
+  ) {
     return this.coursesService.update(id, dto, req.user);
   }
 

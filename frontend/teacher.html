@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+  <body data-role="teacher">
+    <main class="dashboard-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-badge"></div>
+          <div>
+            <h1>Online Course</h1>
+            <p>Teacher Management Workspace</p>
+          </div>
+        </div>
+        <div class="meta">
+          <span class="role-chip" id="role-chip">teacher</span>
+          <button
+            class="profile-toggle"
+            id="profile-toggle"
+            aria-label="Open profile"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"
+              />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <section class="page-header">
+        <h2>Hello, <span id="username">Teacher</span></h2>
+        <p>Create courses, publish lessons, and monitor enrollments.</p>
+      </section>
+
+      <section class="dashboard-layout">
+        <div class="main-column">
+          <section class="grid">
+            <article class="card">
+              <h3>Total Courses</h3>
+              <div class="value" id="teacher-total-courses">0</div>
+            </article>
+            <article class="card">
+              <h3>Published</h3>
+              <div class="value" id="teacher-published-courses">0</div>
+            </article>
+            <article class="card">
+              <h3>Draft Courses</h3>
+              <div class="value" id="teacher-draft-courses">0</div>
+            </article>
+          </section>
+
+          <section class="panel">
+            <h3>Course Status</h3>
+            <ul class="list" id="teacher-course-list">
+              <li>
+                <span>Loading your courses...</span>
+                <span class="badge warning">Wait</span>
+              </li>
+            </ul>
+          </section>
+
+          <p class="footer-note">
+            Teacher panel is isolated and role-protected using token and
+            server-side role checks.
+          </p>
+        </div>
+      </section>
+
+      <aside
+        class="profile-popover hidden"
+        id="profile-panel"
+        aria-hidden="true"
+      >
+        <section class="profile-card">
+          <div class="profile-head">
+            <div class="avatar" id="profile-avatar">T</div>
+            <div>
+              <h3 id="profile-username">Teacher</h3>
+              <p>Profile Overview</p>
+            </div>
+          </div>
+          <ul class="profile-meta">
+            <li>
+              <span class="profile-label">Role</span>
+              <span class="profile-value" id="profile-role">teacher</span>
+            </li>
+            <li>
+              <span class="profile-label">User ID</span>
+              <span class="profile-value" id="profile-id">-</span>
+            </li>
+            <li>
+              <span class="profile-label">Joined</span>
+              <span class="profile-value" id="profile-created">-</span>
+            </li>
+          </ul>
+          <div class="profile-actions">
+            <button id="logout-btn" class="btn btn-ghost profile-logout">
+              Logout
+            </button>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <script src="dashboard.js"></script>
+  </body>
+</html>

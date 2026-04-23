@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+  <body data-role="student">
+    <main class="dashboard-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-badge"></div>
+          <div>
+            <h1>Online Course</h1>
+            <p>Student Learning Workspace</p>
+          </div>
+        </div>
+        <div class="meta">
+          <span class="role-chip" id="role-chip">student</span>
+          <button
+            class="profile-toggle"
+            id="profile-toggle"
+            aria-label="Open profile"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"
+              />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <section class="page-header">
+        <h2>Welcome back, <span id="username">Student</span></h2>
+        <p>Continue your lessons and track progress from one place.</p>
+      </section>
+
+      <section class="dashboard-layout">
+        <div class="main-column">
+          <section class="grid">
+            <article class="card">
+              <h3>Enrolled Courses</h3>
+              <div class="value" id="stat-enrolled">0</div>
+            </article>
+            <article class="card">
+              <h3>Active Learning</h3>
+              <div class="value" id="stat-learning">0</div>
+            </article>
+            <article class="card">
+              <h3>Access Level</h3>
+              <div class="value">Student</div>
+            </article>
+          </section>
+
+          <section class="panel">
+            <h3>Continue Learning</h3>
+            <ul class="list" id="my-courses-list">
+              <li>
+                <span>Loading your courses...</span>
+                <span class="badge warning">Wait</span>
+              </li>
+            </ul>
+          </section>
+
+          <p class="footer-note">
+            Student panel with role-protected access via token verification.
+          </p>
+        </div>
+      </section>
+
+      <aside
+        class="profile-popover hidden"
+        id="profile-panel"
+        aria-hidden="true"
+      >
+        <section class="profile-card">
+          <div class="profile-head">
+            <div class="avatar" id="profile-avatar">S</div>
+            <div>
+              <h3 id="profile-username">Student</h3>
+              <p>Profile Overview</p>
+            </div>
+          </div>
+          <ul class="profile-meta">
+            <li>
+              <span class="profile-label">Role</span>
+              <span class="profile-value" id="profile-role">student</span>
+            </li>
+            <li>
+              <span class="profile-label">User ID</span>
+              <span class="profile-value" id="profile-id">-</span>
+            </li>
+            <li>
+              <span class="profile-label">Joined</span>
+              <span class="profile-value" id="profile-created">-</span>
+            </li>
+          </ul>
+          <div class="profile-actions">
+            <button id="logout-btn" class="btn btn-ghost profile-logout">
+              Logout
+            </button>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <script src="dashboard.js"></script>
+  </body>
+</html>

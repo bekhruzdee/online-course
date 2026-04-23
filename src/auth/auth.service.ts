@@ -99,19 +99,14 @@ export class AuthService {
     const { id, emails, displayName } = profile;
     const email = emails[0].value;
 
-    let user = await this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: { username: email },
     });
 
     if (!user) {
-      user = this.userRepository.create({
-        username: email,
-        provider: 'google',
-        providerId: id,
-        role: Role.STUDENT,
-        password: undefined,
-      });
-      await this.userRepository.save(user);
+      throw new UnauthorizedException(
+        'Account is not provisioned by admin for Google login ❌',
+      );
     }
 
     const payload = { id: user.id, role: user.role };

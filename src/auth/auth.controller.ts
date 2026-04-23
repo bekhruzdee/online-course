@@ -55,9 +55,16 @@ export class AuthController {
     const params = new URLSearchParams({
       welcome: 'true',
       username: user.username.split('@')[0] || user.username,
+      role: user.role,
       token: accessToken,
     });
 
     return res.redirect(`${frontendUrl}?${params.toString()}`);
+  }
+
+  @Get('me')
+  @UseGuards(AuthGuard)
+  me(@Req() req: any) {
+    return this.authService.getAllMyData(req.user);
   }
 }

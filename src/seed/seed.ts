@@ -8,54 +8,62 @@ dotenv.config();
 export async function seed(dataSource: DataSource) {
   const userRepo = dataSource.getRepository(User);
 
+  const upsertUserWithPassword = async (
+    username: string | undefined,
+    plainPassword: string | undefined,
+    role: Role,
+    label: string,
+  ) => {
+    if (!username || !plainPassword) {
+      console.log(`⚠ ${label} skipped: missing username or password in .env`);
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(plainPassword, 12);
+    const existingUser = await userRepo.findOne({ where: { username } });
+
+    if (!existingUser) {
+      const created = userRepo.create({
+        username,
+        password: hashedPassword,
+        role,
+      });
+      await userRepo.save(created);
+      console.log(`✅ ${label} created: ${username}`);
+      return;
+    }
+
+    existingUser.password = hashedPassword;
+    existingUser.role = role;
+    await userRepo.save(existingUser);
+    console.log(`🔄 ${label} updated: ${username}`);
+  };
+
   // 1️⃣ SUPERADMIN
   const superAdminUsername = process.env.SUPER_ADMIN_USERNAME;
   const superAdminPassword = process.env.SUPER_ADMIN_PASSWORD;
-
-  const existingSuperAdmin = await userRepo.findOne({
-    where: { username: superAdminUsername },
-  });
-
-  if (!existingSuperAdmin) {
-    const hashedPassword = await bcrypt.hash(superAdminPassword, 12);
-    const superAdmin = userRepo.create({
-      username: superAdminUsername,
-      password: hashedPassword,
-      role: Role.ADMIN,
-    });
-    await userRepo.save(superAdmin);
-    console.log('✅ Superadmin created');
-  } else {
-    console.log('✔ Superadmin already exists');
-  }
+  await upsertUserWithPassword(
+    superAdminUsername,
+    superAdminPassword,
+    Role.ADMIN,
+    'Superadmin',
+  );
 
   const defaultTeachers = [
     {
-      username: 'Shirin',
+      username: process.env.TEACHER_SHIRIN_USERNAME ?? 'Shirin',
       password: process.env.TEACHER_SHIRIN_PASSWORD,
+      label: 'Teacher-1',
     },
     {
-      username: 'Touka',
+      username: process.env.TEACHER_TOUKA_USERNAME ?? 'Touka',
       password: process.env.TEACHER_TOUKA_PASSWORD,
+      label: 'Teacher-2',
     },
   ];
 
   for (const t of defaultTeachers) {
-    const existingTeacher = await userRepo.findOne({
-      where: { username: t.username },
-    });
-    if (!existingTeacher) {
-      const hashedPassword = await bcrypt.hash(t.password, 12);
-      const teacher = userRepo.create({
-        username: t.username,
-        password: hashedPassword,
-        role: Role.TEACHER,
-      });
-      await userRepo.save(teacher);
-      console.log(`✅ Teacher created: ${t.username}`);
-    } else {
-      console.log(`✔ Teacher already exists: ${t.username}`);
-    }
+    await upsertUserWithPassword(t.username, t.password, Role.TEACHER, t.label);
   }
 
   console.log('🚀 Seeder finished successfully');

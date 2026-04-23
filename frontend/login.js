@@ -1,8 +1,63 @@
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
-const authCard = document.getElementById('auth-card');
-const welcomePage = document.getElementById('welcome-page');
-const welcomeText = document.getElementById('welcome-text');
+
+function getApiBaseUrl() {
+  const fromStorage = localStorage.getItem('api_base_url');
+  if (fromStorage) return fromStorage;
+
+  if (window.location.protocol === 'file:') {
+    return 'http://localhost:3000';
+  }
+
+  if (!window.location.origin || window.location.origin === 'null') {
+    return 'http://localhost:3000';
+  }
+
+  return window.location.origin;
+}
+
+const API_BASE_URL = getApiBaseUrl();
+
+const roleRoutes = {
+  admin: `${API_BASE_URL}/admin.html`,
+  teacher: `${API_BASE_URL}/teacher.html`,
+  student: `${API_BASE_URL}/student.html`,
+};
+
+function redirectByRole(role) {
+  const route = roleRoutes[role];
+  if (!route) return;
+  window.location.href = route;
+}
+
+async function getCurrentUserFromToken(token) {
+  const res = await fetch(`${API_BASE_URL}/auth/me`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) return null;
+  return res.json();
+}
+
+async function bootstrapSession() {
+  const token = localStorage.getItem('access_token');
+  if (!token) return;
+
+  const user = await getCurrentUserFromToken(token);
+  if (!user?.role) {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('role');
+    return;
+  }
+
+  localStorage.setItem('username', user.username);
+  localStorage.setItem('role', user.role);
+  redirectByRole(user.role);
+}
 
 document.getElementById('go-register').onclick = () => {
   loginForm.classList.add('hidden');
@@ -33,7 +88,7 @@ setupToggle('toggle-login-password', 'login-password');
 setupToggle('toggle-register-password', 'register-password');
 
 document.getElementById('google-login').onclick = () => {
-  window.location.href = 'http://localhost:3000/auth/google';
+  window.location.href = `${API_BASE_URL}/auth/google`;
 };
 
 document.getElementById('manual-login').onclick = async () => {
@@ -41,7 +96,7 @@ document.getElementById('manual-login').onclick = async () => {
   const password = document.getElementById('login-password').value;
 
   try {
-    const res = await fetch('http://localhost:3000/auth/login', {
+    const res = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -52,7 +107,9 @@ document.getElementById('manual-login').onclick = async () => {
 
     if (res.ok) {
       localStorage.setItem('username', data.user.username);
-      showWelcome(data.user.username);
+      localStorage.setItem('role', data.user.role);
+      localStorage.setItem('access_token', data.access_token);
+      redirectByRole(data.user.role);
     } else {
       const errorMsg = Array.isArray(data.message)
         ? data.message.join('\n')
@@ -75,7 +132,7 @@ document.getElementById('register-btn').onclick = async () => {
   }
 
   try {
-    const res = await fetch('http://localhost:3000/auth/register', {
+    const res = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
@@ -103,35 +160,15 @@ document.getElementById('register-btn').onclick = async () => {
 
 const params = new URLSearchParams(window.location.search);
 const usernameFromCallback = params.get('username');
+const tokenFromCallback = params.get('token');
+const roleFromCallback = params.get('role');
 
-if (usernameFromCallback) {
+if (usernameFromCallback && tokenFromCallback && roleFromCallback) {
   localStorage.setItem('username', usernameFromCallback);
-  showWelcome(usernameFromCallback);
+  localStorage.setItem('access_token', tokenFromCallback);
+  localStorage.setItem('role', roleFromCallback);
   window.history.replaceState({}, document.title, window.location.pathname);
+  redirectByRole(roleFromCallback);
 }
 
-const savedUser = localStorage.getItem('username');
-if (savedUser) {
-  showWelcome(savedUser);
-}
-
-function showWelcome(username) {
-  authCard.classList.add('hidden');
-  welcomePage.classList.remove('hidden');
-  welcomeText.textContent = `Welcome, ${username}! 🎉`;
-}
-
-document.getElementById('logout-btn').onclick = async () => {
-  try {
-    await fetch('http://localhost:3000/auth/logout', {
-      method: 'POST',
-      credentials: 'include',
-    });
-  } finally {
-    localStorage.clear();
-    welcomePage.classList.add('hidden');
-    authCard.classList.remove('hidden');
-    registerForm.classList.add('hidden');
-    loginForm.classList.remove('hidden');
-  }
-};
+bootstrapSession();

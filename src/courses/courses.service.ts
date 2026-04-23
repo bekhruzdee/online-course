@@ -97,6 +97,35 @@ export class CoursesService {
     };
   }
 
+  async findMyCourses(user: User) {
+    const courses = await this.courseRepository.find({
+      where: { teacher: { id: user.id } },
+      relations: ['teacher'],
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        price: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+        teacher: {
+          id: true,
+          username: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+    });
+
+    return {
+      success: true,
+      message: 'Teacher courses retrieved successfully ✅',
+      data: courses,
+    };
+  }
+
   async findOne(id: string) {
     const course = await this.courseRepository.findOne({
       where: { id },

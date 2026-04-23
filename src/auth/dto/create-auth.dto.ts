@@ -3,7 +3,7 @@ import {
   IsString,
   MinLength,
   MaxLength,
-  Matches
+  Matches,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import sanitizeHtml from 'sanitize-html';
@@ -16,7 +16,7 @@ export class CreateAuthDto {
   })
   @MaxLength(30, { message: 'Username 30 belgidan oshmasligi kerak' })
   @Transform(({ value }) => sanitizeHtml(value?.trim()))
-  username: string;
+  username!: string;
 
   @IsNotEmpty({ message: 'Password bo‘sh bo‘lishi mumkin emas' })
   @IsString({ message: 'Password faqat string bo‘lishi kerak' })
@@ -31,5 +31,5 @@ export class CreateAuthDto {
     message: 'Password ichida kamida 1 ta belgi (symbol) bo‘lishi shart',
   })
   @Transform(({ value }) => sanitizeHtml(value?.trim()))
-  password: string;
+  password!: string;
 }
