@@ -55,10 +55,30 @@
           </section>
 
           <section class="panel">
+            <h3>Available Courses</h3>
+            <ul class="list" id="student-catalog-list">
+              <li>
+                <span>Loading published courses...</span>
+                <span class="badge warning">Wait</span>
+              </li>
+            </ul>
+          </section>
+
+          <section class="panel">
             <h3>Continue Learning</h3>
             <ul class="list" id="my-courses-list">
               <li>
                 <span>Loading your courses...</span>
+                <span class="badge warning">Wait</span>
+              </li>
+            </ul>
+          </section>
+
+          <section class="panel">
+            <h3>My Course Lessons</h3>
+            <ul class="list" id="student-lessons-list">
+              <li>
+                <span>Loading lessons...</span>
                 <span class="badge warning">Wait</span>
               </li>
             </ul>
@@ -95,6 +115,16 @@
             <li>
               <span class="profile-label">Joined</span>
               <span class="profile-value" id="profile-created">-</span>
+            </li>
+            <li>
+              <span class="profile-label">Enrolled Courses</span>
+              <span class="profile-value" id="profile-enrolled-count">0</span>
+            </li>
+          </ul>
+          <ul class="list" id="profile-student-courses">
+            <li>
+              <span>Loading enrolled courses...</span>
+              <span class="badge warning">Wait</span>
             </li>
           </ul>
           <div class="profile-actions">

@@ -44,6 +44,12 @@ export class CoursesController {
     return this.coursesService.findByTitle(query);
   }
 
+  @Roles(Role.STUDENT, Role.TEACHER, Role.ADMIN)
+  @Get('published')
+  findPublished() {
+    return this.coursesService.findPublished();
+  }
+
   @Roles(Role.TEACHER)
   @Get('my')
   findMyCourses(@Req() req) {

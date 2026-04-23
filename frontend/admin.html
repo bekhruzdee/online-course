@@ -35,6 +35,14 @@
       <section class="page-header">
         <h2>Admin access, <span id="username">Admin</span></h2>
         <p>Manage users, moderation, and high-level platform operations.</p>
+        <div class="page-actions">
+          <button class="btn btn-primary" data-action="open-create-user">
+            New User
+          </button>
+          <button class="btn btn-ghost" data-action="open-assign-enrollment">
+            Assign Student To Course
+          </button>
+        </div>
       </section>
 
       <section class="dashboard-layout">
@@ -52,6 +60,20 @@
               <h3>Total Students</h3>
               <div class="value" id="admin-total-students">0</div>
             </article>
+            <article class="card">
+              <h3>Total Enrollments</h3>
+              <div class="value" id="admin-total-enrollments">0</div>
+            </article>
+          </section>
+
+          <section class="panel">
+            <h3>Users</h3>
+            <ul class="list" id="admin-users-list">
+              <li>
+                <span>Loading users...</span>
+                <span class="badge warning">Wait</span>
+              </li>
+            </ul>
           </section>
 
           <section class="panel">
@@ -59,6 +81,16 @@
             <ul class="list" id="admin-queue-list">
               <li>
                 <span>Loading platform data...</span>
+                <span class="badge warning">Wait</span>
+              </li>
+            </ul>
+          </section>
+
+          <section class="panel">
+            <h3>Enrollments</h3>
+            <ul class="list" id="admin-enrollments-list">
+              <li>
+                <span>Loading enrollments...</span>
                 <span class="badge warning">Wait</span>
               </li>
             </ul>

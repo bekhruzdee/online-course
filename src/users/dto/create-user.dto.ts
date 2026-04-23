@@ -14,12 +14,12 @@ export class CreateUserDto {
   @IsString()
   @MinLength(3)
   @Transform(({ value }) => sanitizeHtml(value))
-  username: string;
+  username!: string;
 
   @IsNotEmpty()
   @IsString()
   @MinLength(6)
-  password: string;
+  password!: string;
 
   @IsEnum(Role)
   @IsOptional()

@@ -13,12 +13,12 @@ export class CreateCourseDto {
   @IsString()
   @MaxLength(150)
   @Transform(({ value }) => value?.trim())
-  title: string;
+  title!: string;
 
   @IsNotEmpty()
   @IsString()
   @Transform(({ value }) => value?.trim())
-  description: string;
+  description!: string;
 
   @IsOptional()
   @Type(() => Number)

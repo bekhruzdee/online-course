@@ -30,10 +30,19 @@ export class LessonsController {
     return this.lessonsService.create(dto, req.user);
   }
 
-  @Roles(Role.TEACHER, Role.ADMIN)
+  @Roles(Role.STUDENT, Role.TEACHER, Role.ADMIN)
   @Get('course/:courseId')
-  findAllByCourse(@Param('courseId', ParseUUIDPipe) courseId: string) {
-    return this.lessonsService.findAllByCourse(courseId);
+  findAllByCourse(
+    @Param('courseId', ParseUUIDPipe) courseId: string,
+    @Req() req,
+  ) {
+    return this.lessonsService.findAllByCourse(courseId, req.user);
+  }
+
+  @Roles(Role.TEACHER, Role.ADMIN)
+  @Get('my')
+  findMyLessons(@Req() req) {
+    return this.lessonsService.findMyLessons(req.user);
   }
 
   @Roles(Role.TEACHER, Role.ADMIN)

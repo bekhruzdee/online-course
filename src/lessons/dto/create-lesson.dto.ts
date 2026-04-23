@@ -10,15 +10,15 @@ export class CreateLessonDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(150)
-  title: string;
+  title!: string;
 
   @IsString()
   @IsNotEmpty()
   @IsUrl()
   @MaxLength(500)
-  contentUrl: string;
+  contentUrl!: string;
 
   @IsUUID()
   @IsNotEmpty()
-  courseId: string;
+  courseId!: string;
 }

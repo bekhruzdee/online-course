@@ -35,6 +35,14 @@
       <section class="page-header">
         <h2>Hello, <span id="username">Teacher</span></h2>
         <p>Create courses, publish lessons, and monitor enrollments.</p>
+        <div class="page-actions">
+          <button class="btn btn-primary" data-action="open-create-course">
+            New Course
+          </button>
+          <button class="btn btn-primary" data-action="open-create-lesson">
+            New Lesson
+          </button>
+        </div>
       </section>
 
       <section class="dashboard-layout">
@@ -52,6 +60,16 @@
               <h3>Draft Courses</h3>
               <div class="value" id="teacher-draft-courses">0</div>
             </article>
+          </section>
+
+          <section class="panel">
+            <h3>My Lessons</h3>
+            <ul class="list" id="teacher-lessons-list">
+              <li>
+                <span>Loading your lessons...</span>
+                <span class="badge warning">Wait</span>
+              </li>
+            </ul>
           </section>
 
           <section class="panel">

@@ -97,6 +97,38 @@ export class CoursesService {
     };
   }
 
+  async findPublished() {
+    const courses = await this.courseRepository.find({
+      where: { status: CourseStatus.PUBLISHED },
+      relations: ['teacher'],
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        price: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+        teacher: {
+          id: true,
+          username: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+
+    return {
+      success: true,
+      message: 'Published courses retrieved successfully ✅',
+      data: courses,
+    };
+  }
+
   async findMyCourses(user: User) {
     const courses = await this.courseRepository.find({
       where: { teacher: { id: user.id } },
