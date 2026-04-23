@@ -13,25 +13,25 @@ import { Course } from 'src/courses/entities/course.entity';
 @Entity('lessons')
 export class Lesson {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Index()
   @Column({ length: 150 })
-  title: string;
+  title!: string;
 
   @Column({ length: 500 })
-  contentUrl: string;
+  contentUrl!: string;
 
   @ManyToOne(() => Course, (course) => course.lessons, {
     onDelete: 'CASCADE',
     nullable: false,
   })
   @JoinColumn({ name: 'course_id' })
-  course: Course;
+  course!: Course;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }
