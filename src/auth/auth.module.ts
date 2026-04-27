@@ -17,11 +17,15 @@ import { GoogleAuthGuard } from './google.guard';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
-        const expiresInEnv = config.get<string>('JWT_EXPIRES_IN') || '3600';
+        const expiresInEnv = config.get<string>('JWT_EXPIRES_IN') || '15m';
+        const expiresIn = /^\d+$/.test(expiresInEnv)
+          ? Number(expiresInEnv)
+          : (expiresInEnv as any);
+
         return {
           secret: config.get<string>('JWT_SECRET') || 'default_secret',
           signOptions: {
-            expiresIn: Number(expiresInEnv),
+            expiresIn,
           },
         };
       },

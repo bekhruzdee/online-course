@@ -50,7 +50,7 @@ export class AuthController {
   googleCallback(@Req() req, @Res() res: Response) {
     const { accessToken, user } = req.user;
 
-    const frontendUrl = 'http://localhost:3000/login.html';
+    const frontendUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/login.html`;
 
     const params = new URLSearchParams({
       welcome: 'true',

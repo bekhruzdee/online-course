@@ -2,15 +2,26 @@ function getApiBaseUrl() {
   const fromStorage = localStorage.getItem('api_base_url');
   if (fromStorage) return fromStorage;
 
+  const { protocol, hostname, port, origin } = window.location;
+
   if (window.location.protocol === 'file:') {
     return 'http://localhost:3000';
   }
 
-  if (!window.location.origin || window.location.origin === 'null') {
+  const isLocalHost = hostname === 'localhost' || hostname === '127.0.0.1';
+  if (isLocalHost && port && port !== '3000') {
     return 'http://localhost:3000';
   }
 
-  return window.location.origin;
+  if (!origin || origin === 'null') {
+    return 'http://localhost:3000';
+  }
+
+  if (protocol === 'http:' || protocol === 'https:') {
+    return origin;
+  }
+
+  return 'http://localhost:3000';
 }
 
 const API_BASE_URL = getApiBaseUrl();

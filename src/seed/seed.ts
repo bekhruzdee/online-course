@@ -51,12 +51,12 @@ export async function seed(dataSource: DataSource) {
 
   const defaultTeachers = [
     {
-      username: process.env.TEACHER_SHIRIN_USERNAME ?? 'Shirin',
+      username: process.env.TEACHER_SHIRIN_USERNAME,
       password: process.env.TEACHER_SHIRIN_PASSWORD,
       label: 'Teacher-1',
     },
     {
-      username: process.env.TEACHER_TOUKA_USERNAME ?? 'Touka',
+      username: process.env.TEACHER_TOUKA_USERNAME,
       password: process.env.TEACHER_TOUKA_PASSWORD,
       label: 'Teacher-2',
     },
