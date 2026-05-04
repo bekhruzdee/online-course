@@ -5,7 +5,9 @@ import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
-const loadedEnv = dotenv.config({ path: path.resolve(process.cwd(), '.env') }).parsed ?? process.env;
+const loadedEnv =
+  dotenv.config({ path: path.resolve(process.cwd(), '.env') }).parsed ??
+  process.env;
 
 export async function seed(dataSource: DataSource) {
   const userRepo = dataSource.getRepository(User);
