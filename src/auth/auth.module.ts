@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { User } from 'src/users/entities/user.entity';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from '../common/guards/auth.guard';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { GoogleAuthGuard } from './google.guard';
 

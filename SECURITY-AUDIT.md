@@ -16,6 +16,21 @@
 - ✅ Google OAuth integration
 - ⚠️ Password reset funksiyasi yo'q (-2)
 
+### 1.1 **Authentication/Authz texnik tekshiruv xulosasi**
+- ✅ `AuthGuard` faqat `Authorization: Bearer <token>` formatini qabul qiladi va JWTni `verifyAsync()` bilan tekshiradi; bu soxta yoki muddati o'tgan tokenni o‘tkazmaydi.
+- ✅ `RolesGuard` handler/class metadata orqali ro‘lni server tomonda majburan tekshiradi; client yuborgan qiymatga ishonmaydi.
+- ✅ `bcrypt.hash(..., 12)` ishlatilgani sabab parollar plain text holatda saqlanmaydi.
+- ✅ `refresh_token` HttpOnly cookie sifatida beriladi, shuning uchun u frontend JS orqali o‘qilmaydi.
+- ✅ `ValidationPipe` (`whitelist`, `forbidNonWhitelisted`, `transform`) va `SanitizePipe` kiruvchi body’ni tozalaydi va ortiqcha fieldlarni bloklaydi.
+- ✅ `ClassSerializerInterceptor` + `@Exclude()` parolning response’ga chiqib ketishini kamaytiradi.
+- ✅ `UsersService` va `AuthService` response’lardan `password` maydonini qo‘lda ham olib tashlaydi.
+
+### 1.2 **Aniqlangan xavflar**
+- ⚠️ `JwtModule` va `users.module.ts` ichida `JWT_SECRET` bo‘lmasa `default_secret` fallback ishlaydi; bu production’da juda xavfli, chunki noto‘g‘ri sozlangan muhitda oldindan taxmin qilinadigan secret paydo bo‘ladi.
+- ⚠️ `google/callback` tokenni URL query string orqali frontendga uzatadi; bu token browser history, server log, analytics yoki redirect trace’da ko‘rinib qolishi mumkin.
+- ⚠️ Logout faqat `refresh_token` cookie’ni o‘chiradi; access tokenlar darhol bekor qilinmaydi, shuning uchun ular muddati tugaguncha ishlashda davom etadi.
+- ⚠️ Google login oqimi faqat oldindan provision qilingan user’ga ruxsat beradi; bu xavfsizlik tomondan yaxshi, lekin admin tomonidan user boshqaruvi to‘g‘ri ishlashiga kuchli bog‘liqlik yaratadi.
+
 ### 2. **Input Validation & Sanitization** (20/20)
 - ✅ Global ValidationPipe (whitelist, forbidNonWhitelisted)
 - ✅ class-validator decorators barcha DTOlarda
