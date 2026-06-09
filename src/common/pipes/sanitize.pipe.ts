@@ -14,7 +14,12 @@ export class SanitizePipe implements PipeTransform {
       const field = value[key];
 
       sanitized[key] =
-        typeof field === 'string' ? sanitizeHtml(field.trim()) : field;
+        typeof field === 'string'
+          ? sanitizeHtml(field.trim(), {
+              allowedTags: [],
+              allowedAttributes: {},
+            })
+          : field;
     }
 
     return sanitized;

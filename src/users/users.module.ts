@@ -13,7 +13,12 @@ import { User } from './entities/user.entity';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         global: true,
-        secret: config.get<string>('JWT_SECRET') || 'default_secret',
+        // Require JWT_SECRET to avoid insecure fallback
+        secret: (() => {
+          const s = config.get<string>('JWT_SECRET');
+          if (!s) throw new Error('JWT_SECRET environment variable is required');
+          return s;
+        })(),
         signOptions: {
           expiresIn:
             (config.get<string>('JWT_REFRESH_EXPIRES_IN') as any) || '7d',

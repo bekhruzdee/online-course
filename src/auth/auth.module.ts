@@ -22,8 +22,13 @@ import { GoogleAuthGuard } from './google.guard';
           ? Number(expiresInEnv)
           : (expiresInEnv as any);
 
+        const secret = config.get<string>('JWT_SECRET');
+        if (!secret) {
+          throw new Error('JWT_SECRET environment variable is required');
+        }
+
         return {
-          secret: config.get<string>('JWT_SECRET') || 'default_secret',
+          secret,
           signOptions: {
             expiresIn,
           },

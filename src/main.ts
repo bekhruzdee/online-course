@@ -59,6 +59,17 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
+  // Enforce HTTPS in production (redirect HTTP -> HTTPS)
+  if (process.env.NODE_ENV === 'production') {
+    app.use((req, res, next) => {
+      const proto = req.headers['x-forwarded-proto'] || req.protocol;
+      if (proto && proto.toString().indexOf('https') !== 0) {
+        return res.redirect(`https://${req.headers.host}${req.url}`);
+      }
+      return next();
+    });
+  }
+
   app.useGlobalFilters(new GlobalExceptionFilter());
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
